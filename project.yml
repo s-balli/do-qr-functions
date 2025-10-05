@@ -1,0 +1,9 @@
+packages:
+  - name: qr
+    functions:
+      - name: qr-generator
+        runtime: nodejs:18
+        limits:
+          timeout: 10000  # 10 saniye
+          memory: 256     # 256MB
+        web: true         # Web üzerinden erişilebilir

@@ -1,0 +1,18 @@
+# DigitalOcean Functions
+.deployed
+.build
+
+# Node modules
+node_modules/
+package-lock.json
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db

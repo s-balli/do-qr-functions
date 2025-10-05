@@ -1,0 +1,9 @@
+{
+  "name": "qr-generator",
+  "version": "1.0.0",
+  "description": "QR kod oluşturucu - DigitalOcean Function",
+  "main": "index.js",
+  "dependencies": {
+    "qrcode": "^1.5.3"
+  }
+}
