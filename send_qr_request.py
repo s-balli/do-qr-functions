@@ -8,7 +8,7 @@ def generate_qr_code(url, text, size=300, format='base64', color='#000000', back
     if function_url is None:
         # Buraya kendi DigitalOcean Function URL'nizi yazın
         # Doğru format: https://$API_HOST/$NAMESPACE/$FUNCTION
-        function_url = 'https://hammerhead-app-n7t2h.ondigitalocean.app/qr/qr-generator'
+        function_url = ' '
     
     payload = {
         'text': text,
