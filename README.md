@@ -1,189 +1,141 @@
-# QR Kod Oluşturucu - DigitalOcean Function
+# 🚀 Advanced QR Code Generator - DigitalOcean Functions
 
-DigitalOcean Functions kullanarak basit bir QR kod oluşturucu servisi.
+DigitalOcean Functions üzerinde çalışan, zengin özelliklere sahip, modern bir Serverless QR Kod Oluşturucu.
 
+## ✨ Özellikler
 
-## 💻 Kullanım
+*   **Gelişmiş Formatlar:** PNG (Base64) ve SVG (Vektörel) çıktı desteği.
+*   **Tam Özelleştirme:** Boyut, renk ve arka plan rengi ayarları.
+*   **Hata Düzeltme:** Yıpranmış QR kodların okunabilmesi için L, M, Q, H seviyeleri.
+*   **Kenar Boşluğu:** QR kod çevresindeki beyaz alanı (margin) ayarlama.
+*   **Hazır Şablonlar:** WiFi paylaşımı ve Kartvizit (vCard) oluşturma desteği.
+*   **Test Arayüzü:** Kullanıcı dostu HTML5 arayüzü ile tarayıcıdan kolay kullanım.
 
-### Örnek 1: Basit Metin QR Kodu (Base64)
+---
 
-```bash
-curl -X POST \
-  "https://YOUR-FUNCTION-URL" \
-  -H "Content-Type: application/json" \
-  -d '{"text": "Merhaba Dünya!"}'
-```
+## 🛠️ Kurulum ve Deploy
 
-**Yanıt:**
-```json
-{
-  "success": true,
-  "text": "Merhaba Dünya!",
-  "format": "base64",
-  "qrCode": "data:image/png;base64,iVBORw0KGgoAAAANS...",
-  "info": "Base64 formatında - <img src=\"...\" /> ile kullanabilirsiniz"
-}
-```
+Bu projeyi DigitalOcean üzerinde çalıştırmanın en kolay iki yolu:
 
-### Örnek 2: URL QR Kodu
+### Yöntem 1: App Platform (Önerilen)
+1. Bu projeyi GitHub hesabınıza fork'layın veya yükleyin.
+2. [DigitalOcean App Platform](https://cloud.digitalocean.com/apps) sayfasına gidin.
+3. **Create App** -> **GitHub** seçeneği ile reponuzu bağlayın.
+4. DigitalOcean projeyi `Functions` olarak otomatik algılayacaktır.
+5. **Next** diyerek ilerleyin ve **Create Resources** butonuna basın.
+6. Deploy bittiğinde size verilen URL'i (örn: `https://...ondigitalocean.app`) kullanmaya başlayabilirsiniz.
 
-```bash
-curl -X POST \
-  "https://YOUR-FUNCTION-URL" \
-  -H "Content-Type: application/json" \
-  -d '{"text": "https://digitalocean.com", "size": 500}'
-```
-
-### Örnek 3: Renkli QR Kod
+### Yöntem 2: CLI (doctl)
+Bilgisayarınızda `doctl` yüklü ise:
 
 ```bash
-curl -X POST \
-  "https://YOUR-FUNCTION-URL" \
+# DigitalOcean'a bağlan
+doctl auth init
+
+# Serverless eklentisini kur
+doctl serverless install
+
+# Projeyi deploy et
+doctl serverless deploy . --remote-build
+```
+
+---
+
+## 💻 Kullanım ve API Dokümantasyonu
+
+Fonksiyonunuz deploy edildikten sonra `/qr/qr-generator` endpoint'ine `POST` istekleri atarak kullanabilirsiniz.
+
+**Endpoint:** `https://<APP-URL>/qr/qr-generator`
+
+### Parametreler (JSON Body)
+
+| Parametre | Tip | Varsayılan | Açıklama |
+|-----------|-----|------------|----------|
+| `text` | string | **Zorunlu** | QR koda çevrilecek metin veya veri. |
+| `size` | number | `300` | QR kodun piksel cinsinden boyutu (100-1000 arası). |
+| `margin` | number | `1` | Kenar boşluğu kalınlığı (blok sayısı). |
+| `errorCorrectionLevel` | string | `'M'` | Hata düzeltme seviyesi: `'L'`, `'M'`, `'Q'`, `'H'`. |
+| `format` | string | `'base64'` | Çıktı formatı: `'base64'` (resim), `'svg'` (vektör). |
+| `color` | hex | `'#000000'` | QR kod rengi (Örn: `#FF0000`). |
+| `background` | hex | `'#FFFFFF'` | Arka plan rengi. |
+
+### Örnek İstekler
+
+#### 1. Basit URL (cURL)
+```bash
+curl -X POST "https://<APP-URL>/qr/qr-generator" \
   -H "Content-Type: application/json" \
-  -d '{
-    "text": "https://github.com",
-    "color": "#0066CC",
-    "background": "#FFFFFF",
+  -d 
+  {
+    "text": "https://digitalocean.com",
     "size": 400
-  }'
+  }
 ```
 
-### Örnek 4: SVG Format
-
+#### 2. WiFi Paylaşımı
 ```bash
-curl -X POST \
-  "https://YOUR-FUNCTION-URL" \
+curl -X POST "https://<APP-URL>/qr/qr-generator" \
   -H "Content-Type: application/json" \
-  -d '{"text": "SVG QR Kod", "format": "svg"}'
+  -d 
+  {
+    "text": "WIFI:S:EvInternetim;T:WPA;P:gizlisifre;;",
+    "errorCorrectionLevel": "H",
+    "color": "#4F46E5"
+  }
 ```
 
-## 🌐 HTML'de Kullanım
-
-**Not:** Tarayıcıda CORS hatası alabilirsiniz. Bu durumda Python script'i ile tarayıcı bağımsız kullanım önerilir.
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>QR Kod Oluşturucu</title>
-</head>
-<body>
-    <h1>QR Kod Oluşturucu</h1>
-    <input type="text" id="qrText" placeholder="Metin veya URL girin">
-    <button onclick="generateQR()">QR Kod Oluştur</button>
-    <div id="result"></div>
-
-    <script>
-        async function generateQR() {
-            const text = document.getElementById('qrText').value;
-
-            const response = await fetch('YOUR-FUNCTION-URL', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: text, size: 300 })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                document.getElementById('result').innerHTML =
-                    `<img src="${data.qrCode}" alt="QR Kod">`;
-            }
-        }
-    </script>
-</body>
-</html>
+#### 3. JavaScript (Fetch)
+```javascript
+const response = await fetch('https://<APP-URL>/qr/qr-generator', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    text: 'Merhaba!',
+    format: 'svg',
+    margin: 2
+  })
+});
+const svgData = await response.text();
 ```
 
-## 🐍 Python ile Kullanım (CORS Hatası Olmadan)
+---
 
-Proje klasöründe `send_qr_request.py` dosyası ile doğrudan API istekleri atabilirsiniz:
+## 🧪 Test ve Geliştirme
 
+### Tarayıcı Arayüzü (`test.html`)
+Proje içinde gelen `test.html` dosyası, API'yi denemeniz için modern bir arayüz sunar.
+1. `test.html` dosyasını bir metin editörüyle açın.
+2. `FUNCTION_URL` satırını kendi deploy ettiğiniz URL ile güncelleyin.
+3. Dosyayı tarayıcınızda açın.
+
+### Python Test Aracı
+Terminal üzerinden test etmek için:
 ```bash
 python3 send_qr_request.py
 ```
 
-Script kullanıcıdan URL, boyut, format, renk gibi bilgileri sorar ve QR kodu oluşturur. Oluşturulan QR kod `qr_code.png` (veya `qr_code.svg`) dosyasına kaydedilir.
-
-## ⚙️ Parametreler
-
-| Parametre | Tip | Varsayılan | Açıklama |
-|-----------|-----|------------|----------|
-| `text` | string | - | QR koda dönüştürülecek metin/URL (zorunlu) |
-| `size` | number | 300 | QR kod boyutu (piksel) |
-| `format` | string | "base64" | Çıktı formatı: "base64", "svg", "png" |
-| `color` | string | "#000000" | QR kod rengi (hex kod) |
-| `background` | string | "#FFFFFF" | Arka plan rengi (hex kod) |
-
-## 🧪 Yerel Test
-
-DigitalOcean fonksiyonları yerel olarak test etmek için:
-
+### Yerel Geliştirme (Localhost)
+Fonksiyonu kendi bilgisayarınızda simüle etmek için:
 ```bash
-# Yerel sunucuyu başlat
-doctl serverless undeploy --all
-doctl serverless deploy . --remote-build
+npm start
+# Veya
+node test-server.js
 ```
-
-## 📊 Maliyet Hesaplama
-
-**Örnek Senaryo:**
-- Fonksiyon: 256MB hafıza
-- Çalışma süresi: Ortalama 0.5 saniye
-- Aylık çağrı: 10,000
-
-**Hesaplama:**
-- GiB-second = 0.25 GiB × 0.5 saniye = 0.125 GiB-second
-- Toplam = 10,000 × 0.125 = 1,250 GiB-second
-- **Ücretsiz** (90,000 GiB-second limiti içinde)
-
-## 📚 Öğrenci Projeleri İçin İpuçları
-
-1. **WiFi QR Kod:** WiFi bilgilerini QR koda çevir
-2. **vCard QR:** İletişim bilgilerini QR kod yap
-3. **Toplu QR:** Birden fazla QR kod oluştur
-4. **QR Analytics:** QR kod kullanım istatistikleri
-5. **Custom Logo:** QR kod ortasına logo ekle
-
-## 🛠️ Geliştirme
-
-```bash
-# Logları görüntüle
-doctl serverless activations list
-doctl serverless activations get <activation-id>
-
-# Fonksiyonu güncelle
-# Değişiklikleri yap, sonra:
-doctl serverless deploy .
-```
-
-## 🔧 Sorun Giderme
-
-### Deploy Hatası
-```bash
-# Namespace'i kontrol et
-doctl serverless status
-
-# Yeniden bağlan
-doctl serverless connect
-```
-
-### Fonksiyon Çalışmıyor
-```bash
-# Logları kontrol et
-doctl serverless activations logs --limit 5
-```
-
-## 📖 Kaynaklar
-
-- [DigitalOcean Functions Docs](https://docs.digitalocean.com/products/functions/)
-- [doctl CLI Reference](https://docs.digitalocean.com/reference/doctl/)
-- [QRCode.js Docs](https://github.com/soldair/node-qrcode)
-
-## 📝 Lisans
-
-Eğitim amaçlı örnek proje - Özgürce kullanabilirsiniz.
+Bu komut `http://localhost:3000` adresinde basit bir sunucu başlatır.
 
 ---
 
-**Not:** `YOUR-FUNCTION-URL` kısmını kendi fonksiyon URL'inizle değiştirin.
+## 📂 Proje Yapısı
+
+```
+.
+├── packages/qr/qr-generator/  # Fonksiyon kaynak kodları
+│   ├── index.js               # Ana fonksiyon mantığı
+│   └── package.json           # Fonksiyon bağımlılıkları
+├── test.html                  # Kullanıcı arayüzü (Frontend)
+├── project.yml                # DigitalOcean yapılandırma dosyası
+└── README.md                  # Dokümantasyon
+```
+
+## 📝 Lisans
+Bu proje eğitim amaçlıdır ve özgürce kullanılabilir.
