@@ -125,6 +125,8 @@ curl -X POST \
 
 ## 🌐 HTML'de Kullanım
 
+**Not:** Tarayıcıda CORS hatası alabilirsiniz. Bu durumda Python script'i ile tarayıcı bağımsız kullanım önerilir.
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -158,6 +160,16 @@ curl -X POST \
 </body>
 </html>
 ```
+
+## 🐍 Python ile Kullanım (CORS Hatası Olmadan)
+
+Proje klasöründe `send_qr_request.py` dosyası ile doğrudan API istekleri atabilirsiniz:
+
+```bash
+python3 send_qr_request.py
+```
+
+Script kullanıcıdan URL, boyut, format, renk gibi bilgileri sorar ve QR kodu oluşturur. Oluşturulan QR kod `qr_code.png` (veya `qr_code.svg`) dosyasına kaydedilir.
 
 ## ⚙️ Parametreler
 

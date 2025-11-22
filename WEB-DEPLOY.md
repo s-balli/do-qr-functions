@@ -203,10 +203,21 @@ curl -X POST \
 ```
 
 ### test.html ile:
+**Not:** CORS politikası nedeniyle tarayıcıda hata alabilirsiniz. Alternatif olarak Python script'ini kullanın.
+
 1. `test.html` dosyasını aç
 2. İçindeki `YOUR-FUNCTION-URL-HERE` kısmını URL'inle değiştir
 3. Tarayıcıda aç
 4. Test et!
+
+### Python ile (CORS Hatası Olmadan):
+Python script'ini kullanarak doğrudan API'ye istek gönderebilirsiniz:
+
+```bash
+python3 send_qr_request.py
+```
+
+Script kullanıcıdan URL, boyut, format, renk gibi bilgileri sorar ve QR kodu oluşturur. Oluşturulan QR kod `qr_code.png` (veya `qr_code.svg`) dosyasına kaydedilir.
 
 ### Postman ile:
 1. **POST** request oluştur

@@ -128,9 +128,20 @@ curl -X POST \
 ```
 
 ### test.html'i güncelle:
+**Not:** Tarayıcıda CORS politikası nedeniyle hata alabilirsiniz. Alternatif olarak Python script'ini kullanın.
+
 1. `test.html` dosyasını aç
 2. `YOUR-FUNCTION-URL-HERE` kısmını yeni URL ile değiştir
 3. Kaydet ve tarayıcıda aç
+
+### Python script'i ile kullanım:
+Python script'ini kullanarak doğrudan API'ye istek gönderebilirsiniz:
+
+```bash
+python3 send_qr_request.py
+```
+
+Script kullanıcıdan URL, boyut, format, renk gibi bilgileri sorar ve QR kodu oluşturur. Oluşturulan QR kod `qr_code.png` (veya `qr_code.svg`) dosyasına kaydedilir.
 
 ---
 

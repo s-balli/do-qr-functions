@@ -10,18 +10,20 @@ const QRCode = require('qrcode');
  */
 
 async function main(args) {
-  try {
-    // CORS başlıklarını ekle
-    const corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept, Origin'
-    };
+  // CORS başlıklarını ekle
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept, Origin',
+    'Access-Control-Max-Age': '86400' // 24 saat
+  };
 
+  try {
     // OPTIONS preflight isteği için yanıt
-    if (args.__ow_method === 'options' || args.httpMethod === 'OPTIONS') {
+    const method = args.__ow_method || args.httpMethod || '';
+    if (method.toLowerCase() === 'options') {
       return {
-        statusCode: 200,
+        statusCode: 204, // No Content
         headers: corsHeaders,
         body: ''
       };
