@@ -409,8 +409,11 @@
         const bg = document.getElementById('opt-bg').value;
 
         document.getElementById('loading').style.display = 'block';
-        document.getElementById('qr-placeholder').style.display = 'none';
-        document.getElementById('error-msg').style.display = 'none';
+        const placeholder = document.getElementById('qr-placeholder');
+        if (placeholder) placeholder.style.display = 'none';
+        
+        const errorMsg = document.getElementById('error-msg');
+        if (errorMsg) errorMsg.style.display = 'none';
 
         try {
             const response = await fetch(FUNCTION_URL, {
