@@ -86,7 +86,7 @@ def main():
         background = '#FFFFFF'
     
     # URL ve diğer parametrelerle API isteğini gönder
-    function_url = 'https://hammerhead-app-n7t2h.ondigitalocean.app/qr/qr-generator'  # Kendi URL'nizi buraya yazın
+    function_url = ' '  # Kendi URL'nizi buraya yazın
     
     # QR kodu oluştur
     result, response = generate_qr_code(None, text, size=size, format=format_input, color=color, background=background, function_url=function_url)
