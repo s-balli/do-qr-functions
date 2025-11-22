@@ -10,27 +10,14 @@ const QRCode = require('qrcode');
  */
 
 async function main(args) {
-  // CORS başlıklarını ekle
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept, Origin',
-    'Access-Control-Max-Age': '86400', // 24 saat
+  // CORS başlıkları DigitalOcean App Platform tarafından otomatik yönetildiği için
+  // burada manuel olarak eklemiyoruz, aksi takdirde "multiple values" hatası alınıyor.
+  const responseHeaders = {
     'Content-Type': 'application/json'
   };
 
   try {
-    // OPTIONS preflight isteği için yanıt
-    const method = args.__ow_method || args.httpMethod || '';
-    if (method.toLowerCase() === 'options') {
-      return {
-        statusCode: 204, // No Content
-        headers: corsHeaders
-      };
-    }
-
-    // Tüm diğer istekler için CORS header'larını ekle
-    const responseHeaders = { ...corsHeaders };
+    // OPTIONS preflight istekleri platform tarafından karşılandığı için kod bloğu kaldırıldı.
 
     // Parametreleri al
     const text = args.text || args.url;
