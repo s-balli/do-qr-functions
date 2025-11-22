@@ -137,5 +137,17 @@ Bu komut `http://localhost:3000` adresinde basit bir sunucu başlatır.
 └── README.md                  # Dokümantasyon
 ```
 
+## 🛠️ Teknolojik Altyapı
+
+Proje, modern **Serverless (Sunucusuz)** mimari üzerine inşa edilmiştir.
+
+*   **Platform:** DigitalOcean Functions
+*   **Dil:** Node.js 18 (JavaScript)
+*   **Çekirdek Kütüphane:** `node-qrcode` - Metinleri QR matrisine dönüştüren motor.
+*   **Mimari:**
+    *   **Stateless (Durumsuz):** Sunucu sürekli açık değildir. Sadece istek geldiğinde fonksiyon çalışır, işini yapar ve kapanır. Bu sayede kaynak tüketimi ve maliyet minimumdur.
+    *   **Event-Driven:** HTTP istekleri (tetikleyiciler) ile çalışır.
+*   **İşleyiş:** Backend, gelen JSON isteğindeki parametreleri (`text`, `size`, `color` vb.) işler, `qrcode` kütüphanesi ile görseli oluşturur ve istemciye uygun formatta (`base64`, `svg` veya `png`) yanıt döner.
+
 ## 📝 Lisans
 Bu proje eğitim amaçlıdır ve özgürce kullanılabilir.
