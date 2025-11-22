@@ -270,19 +270,24 @@
                     })
                 });
 
-                const data = await response.json();
-
                 hideLoading();
 
-                if (data.success) {
+                if (response.ok) {
                     if (format === 'base64') {
-                        showResult(`<img src="${data.qrCode}" alt="QR Kod">`);
+                        const data = await response.json();
+                        if (data.success) {
+                            showResult(`<img src="${data.qrCode}" alt="QR Kod">`);
+                        } else {
+                            showError(data.error || 'QR kod oluşturulamadı');
+                        }
                     } else if (format === 'svg') {
-                        // SVG için özel işlem gerekebilir
-                        showResult('<p>SVG formatı için API response\'u kontrol edin</p>');
+                        // SVG doğrudan text olarak gelir
+                        const svgData = await response.text();
+                        showResult(svgData);
                     }
                 } else {
-                    showError(data.error || 'QR kod oluşturulamadı');
+                    const errorData = await response.json();
+                    showError(errorData.error || 'QR kod oluşturulamadı');
                 }
             } catch (error) {
                 hideLoading();
