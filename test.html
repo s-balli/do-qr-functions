@@ -3,359 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Kod Oluşturucu - Test</title>
+    <title>Gelişmiş QR Kod Oluşturucu</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338ca;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #000000;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-start;
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 5px;
-            text-align: center;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .subtitle {
-            color: #666;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .form-group {
-            margin-bottom: 22px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            color: #444;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        input[type="color"],
-        select {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            background-color: #f8fafc;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-            background-color: white;
-        }
-
-        .row {
+        .main-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 40px;
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 40px;
         }
 
-        button {
+        @media (max-width: 768px) {
+            .main-wrapper { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #111827; }
+        p.subtitle { color: #6b7280; margin-bottom: 2rem; font-size: 0.9rem; }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #f3f4f6;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .form-group { margin-bottom: 1.2rem; }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        input[type="text"], input[type="number"], input[type="password"], select, textarea {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        button.generate-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: background-color 0.2s;
+            margin-top: 1rem;
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
+        button.generate-btn:hover { background-color: var(--primary-hover); }
 
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        #result {
-            margin-top: 30px;
+        #result-area {
             text-align: center;
-            display: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
         }
 
-        #result.show {
-            display: block;
+        #qr-placeholder {
+            width: 300px;
+            height: 300px;
+            background-color: #f9fafb;
+            border: 2px dashed #e5e7eb;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
         }
 
-        #result img {
+        #result-img {
             max-width: 100%;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-actions {
+            margin-top: 20px;
+            display: none;
+            gap: 10px;
+        }
+        
+        .download-actions.show { display: flex; }
+
+        .btn-secondary {
+            padding: 0.5rem 1rem;
             background: white;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e1e5e9;
-        }
-
-        .error {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 10%);
-            color: #c62828;
-            padding: 18px;
-            border-radius: 12px;
-            margin-top: 20px;
-            display: none;
-            border-left: 4px solid #f44336;
-            font-weight: 500;
-        }
-
-        .error.show {
-            display: block;
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% {transform: translateX(0);}
-            20%, 60% {transform: translateX(-3px);}
-            40%, 80% {transform: translateX(3px);}
-        }
-
-        .loading {
-            text-align: center;
-            color: #667eea;
-            margin-top: 20px;
-            display: none;
-            font-weight: 500;
-            font-size: 16px;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .config-notice {
-            background: linear-gradient(135deg, #fff9c4 0%, #fff3e0 100%);
-            border: 1px solid #ffecb3;
-            padding: 18px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #856404;
-            border-left: 4px solid #ffc107;
-        }
-
-        .config-notice code {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 4px 8px;
+            border: 1px solid #d1d5db;
             border-radius: 6px;
-            font-family: monospace;
-            font-weight: 600;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #374151;
+            text-decoration: none;
+            font-size: 0.9rem;
+            cursor: pointer;
         }
+        
+        .btn-secondary:hover { background: #f9fafb; }
+
+        /* Helper Forms (WiFi etc) */
+        .helper-form { display: none; }
+        .helper-form.active { display: block; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>QR Kod Oluşturucu</h1>
-        <p class="subtitle">DigitalOcean Functions ile</p>
 
-        <div class="config-notice">
-            ⚠️ <strong>Önemli:</strong> Önce aşağıdaki <code>FUNCTION_URL</code> değerini kendi fonksiyon URL'nizle değiştirin (sayfa kaynağında)
-        </div>
+    <div class="main-wrapper">
+        <!-- LEFT COLUMN: CONTROLS -->
+        <div class="card">
+            <h1>QR Stüdyosu</h1>
+            <p class="subtitle">DigitalOcean Functions ile güçlendirilmiştir</p>
 
-        <form id="qrForm">
-            <div class="form-group">
-                <label for="text">Metin veya URL</label>
-                <input
-                    type="text"
-                    id="text"
-                    placeholder="https://digitalocean.com"
-                    value="https://digitalocean.com"
-                    required
-                >
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('text')">Metin/URL</button>
+                <button class="tab-btn" onclick="switchTab('wifi')">WiFi</button>
+                <button class="tab-btn" onclick="switchTab('vcard')">Kartvizit</button>
+            </div>
+
+            <!-- TEXT FORM -->
+            <div id="form-text" class="helper-form active">
+                <div class="form-group">
+                    <label>Metin veya URL</label>
+                    <input type="text" id="qr-text" placeholder="https://ornek.com" value="https://digitalocean.com">
+                </div>
+            </div>
+
+            <!-- WIFI FORM -->
+            <div id="form-wifi" class="helper-form">
+                <div class="form-group">
+                    <label>Ağ Adı (SSID)</label>
+                    <input type="text" id="wifi-ssid" placeholder="Ev İnterneti">
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="text" id="wifi-password" placeholder="wifi_sifresi">
+                </div>
+                <div class="form-group">
+                    <label>Güvenlik Tipi</label>
+                    <select id="wifi-type">
+                        <option value="WPA">WPA/WPA2</option>
+                        <option value="WEP">WEP</option>
+                        <option value="nopass">Şifresiz</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- VCARD FORM -->
+            <div id="form-vcard" class="helper-form">
+                <div class="row">
+                    <div class="form-group">
+                        <label>Ad</label>
+                        <input type="text" id="vcard-first" placeholder="Ali">
+                    </div>
+                    <div class="form-group">
+                        <label>Soyad</label>
+                        <input type="text" id="vcard-last" placeholder="Yılmaz">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Telefon</label>
+                    <input type="text" id="vcard-phone" placeholder="+90 555 ...">
+                </div>
+                <div class="form-group">
+                    <label>E-posta</label>
+                    <input type="text" id="vcard-email" placeholder="ali@ornek.com">
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+
+            <!-- COMMON SETTINGS -->
+            <div class="row">
+                <div class="form-group">
+                    <label>Boyut (px)</label>
+                    <input type="number" id="opt-size" value="300" min="100" max="1000">
+                </div>
+                <div class="form-group">
+                    <label>Kenar Boşluğu</label>
+                    <input type="number" id="opt-margin" value="1" min="0" max="10">
+                </div>
             </div>
 
             <div class="row">
                 <div class="form-group">
-                    <label for="size">Boyut (px)</label>
-                    <input
-                        type="number"
-                        id="size"
-                        value="300"
-                        min="100"
-                        max="1000"
-                    >
+                    <label>Hata Düzeltme</label>
+                    <select id="opt-ecc">
+                        <option value="L">Düşük (%7)</option>
+                        <option value="M" selected>Orta (%15)</option>
+                        <option value="Q">Kaliteli (%25)</option>
+                        <option value="H">Yüksek (%30)</option>
+                    </select>
                 </div>
-
                 <div class="form-group">
-                    <label for="format">Format</label>
-                    <select id="format">
-                        <option value="base64">Base64 (PNG)</option>
-                        <option value="svg">SVG</option>
+                    <label>Format</label>
+                    <select id="opt-format">
+                        <option value="base64">PNG (Görüntü)</option>
+                        <option value="svg">SVG (Vektörel)</option>
                     </select>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group">
-                    <label for="color">QR Rengi</label>
-                    <input type="color" id="color" value="#000000">
+                    <label>QR Rengi</label>
+                    <input type="color" id="opt-color" value="#000000" style="height: 45px; padding: 5px;">
                 </div>
-
                 <div class="form-group">
-                    <label for="background">Arka Plan</label>
-                    <input type="color" id="background" value="#FFFFFF">
+                    <label>Arka Plan</label>
+                    <input type="color" id="opt-bg" value="#FFFFFF" style="height: 45px; padding: 5px;">
                 </div>
             </div>
 
-            <button type="submit">QR Kod Oluştur</button>
-        </form>
-
-        <div class="loading" id="loading">
-            ⏳ QR kod oluşturuluyor...
+            <button class="generate-btn" onclick="generateQR()">QR Kod Oluştur</button>
         </div>
 
-        <div class="error" id="error"></div>
-
-        <div id="result"></div>
+        <!-- RIGHT COLUMN: PREVIEW -->
+        <div class="card" id="result-area">
+            <div id="qr-preview">
+                <div id="qr-placeholder">
+                    <span>Önizleme burada görünecek</span>
+                </div>
+            </div>
+            <div id="loading" style="display: none; margin-top: 20px;">
+                ⌛ Oluşturuluyor...
+            </div>
+            <div class="download-actions" id="download-area">
+                <a id="btn-download" class="btn-secondary" download="qrcode.png" href="#">Save İndir</a>
+            </div>
+            <div id="error-msg" style="color: red; margin-top: 20px; display: none;"></div>
+        </div>
     </div>
 
     <script>
-        // ⚠️ Bu URL'yi kendi DigitalOcean Functions URL'nizle değiştirin
-        // Local test için:
-        // const FUNCTION_URL = 'https://hammerhead-app-n7t2h.ondigitalocean.app/qr/qr-generator';
-        // Local test için:
+        // ⚠️ FUNCTION URL BURAYA
         const FUNCTION_URL = 'https://hammerhead-app-n7t2h.ondigitalocean.app/qr/qr-generator';
-        // DigitalOcean için (deploy edildikten sonra):
-        // const FUNCTION_URL = 'https://hammerhead-app-n7t2h.ondigitalocean.app/qr/qr-generator';
 
-        document.getElementById('qrForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        let currentTab = 'text';
 
-            // URL kontrolü
-            if (FUNCTION_URL === 'YOUR-FUNCTION-URL-HERE') {
-                showError('Lütfen FUNCTION_URL değerini ayarlayın! (Sayfa kaynağını düzenleyin)');
-                return;
+        function switchTab(tab) {
+            currentTab = tab;
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update forms
+            document.querySelectorAll('.helper-form').forEach(f => f.classList.remove('active'));
+            document.getElementById(`form-${tab}`).classList.add('active');
+        }
+
+        function getContent() {
+            if (currentTab === 'text') {
+                return document.getElementById('qr-text').value;
+            } else if (currentTab === 'wifi') {
+                const ssid = document.getElementById('wifi-ssid').value;
+                const pass = document.getElementById('wifi-password').value;
+                const type = document.getElementById('wifi-type').value;
+                return `WIFI:S:${ssid};T:${type};P:${pass};;`;
+            } else if (currentTab === 'vcard') {
+                const first = document.getElementById('vcard-first').value;
+                const last = document.getElementById('vcard-last').value;
+                const phone = document.getElementById('vcard-phone').value;
+                const email = document.getElementById('vcard-email').value;
+                return `BEGIN:VCARD\nVERSION:3.0\nN:${last};${first}\nFN:${first} ${last}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
             }
+        }
 
-            // Form verilerini al
-            const text = document.getElementById('text').value;
-            const size = parseInt(document.getElementById('size').value);
-            const format = document.getElementById('format').value;
-            const color = document.getElementById('color').value;
-            const background = document.getElementById('background').value;
+        async function generateQR() {
+            const text = getContent();
+            if (!text) return alert('Lütfen içerik giriniz');
 
-            // UI güncelle
-            showLoading();
-            hideError();
-            hideResult();
+            const size = document.getElementById('opt-size').value;
+            const margin = document.getElementById('opt-margin').value;
+            const ecc = document.getElementById('opt-ecc').value;
+            const format = document.getElementById('opt-format').value;
+            const color = document.getElementById('opt-color').value;
+            const bg = document.getElementById('opt-bg').value;
+
+            // UI Updates
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('qr-preview').innerHTML = '';
+            document.getElementById('download-area').classList.remove('show');
+            document.getElementById('error-msg').style.display = 'none';
 
             try {
                 const response = await fetch(FUNCTION_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        text,
-                        size,
-                        format,
-                        color,
-                        background
+                        text, size: parseInt(size), margin, errorCorrectionLevel: ecc, format, color, background: bg
                     })
                 });
 
-                hideLoading();
+                const data = await response.json();
 
-                if (response.ok) {
-                    if (format === 'base64') {
-                        const data = await response.json();
-                        if (data.success) {
-                            showResult(`<img src="${data.qrCode}" alt="QR Kod">`);
-                        } else {
-                            showError(data.error || 'QR kod oluşturulamadı');
-                        }
-                    } else if (format === 'svg') {
-                        // SVG doğrudan text olarak gelir
-                        const svgData = await response.text();
-                        showResult(svgData);
-                    }
-                } else {
-                    const errorData = await response.json();
-                    showError(errorData.error || 'QR kod oluşturulamadı');
+                if (format === 'base64' && data.success) {
+                    // Show Image
+                    document.getElementById('qr-preview').innerHTML = `<img id="result-img" src="${data.qrCode}" alt="QR">
+`;
+                    
+                    // Setup Download
+                    const dlBtn = document.getElementById('btn-download');
+                    dlBtn.href = data.qrCode;
+                    dlBtn.download = `qr-code-${Date.now()}.png`;
+                    document.getElementById('download-area').classList.add('show');
+                
+                } else if (format === 'svg') {
+                    // Show SVG
+                    // Note: Fetch returns json/text based on backend. 
+                    // If backend returns JSON for SVG (it currently returns text/plain body for SVG based on index.js logic)
+                    // Wait, index.js returns body: qrData string with Content-Type text/plain
+                    // But here we parsed json() which might fail if it's plain text.
                 }
-            } catch (error) {
-                hideLoading();
-                showError('Bağlantı hatası: ' + error.message);
+                
+                // Re-handling response for robustness
+                // The previous 'response.json()' call consumed the stream.
+                // Let's refactor the fetch slightly to handle text/json differences.
+                
+            } catch (err) {
+                // If json() failed, maybe it was text (SVG)
+                console.error(err);
             }
-        });
-
-        function showLoading() {
-            document.getElementById('loading').classList.add('show');
+            
+            // Let's redo the fetch handling logic properly below
         }
+    </script>
+    
+    <!-- Corrected Script Logic -->
+    <script>
+    // Override the generateQR function with correct handling
+    window.generateQR = async function() {
+        const text = getContent();
+        if (!text) return alert('Lütfen içerik giriniz');
 
-        function hideLoading() {
-            document.getElementById('loading').classList.remove('show');
-        }
+        const size = document.getElementById('opt-size').value;
+        const margin = document.getElementById('opt-margin').value;
+        const ecc = document.getElementById('opt-ecc').value;
+        const format = document.getElementById('opt-format').value;
+        const color = document.getElementById('opt-color').value;
+        const bg = document.getElementById('opt-bg').value;
 
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            errorDiv.classList.add('show');
-        }
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('qr-placeholder').style.display = 'none';
+        document.getElementById('error-msg').style.display = 'none';
 
-        function hideError() {
-            document.getElementById('error').classList.remove('show');
-        }
+        try {
+            const response = await fetch(FUNCTION_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text, size: parseInt(size), margin, errorCorrectionLevel: ecc, format, color, background: bg
+                })
+            });
 
-        function showResult(html) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = html;
-            resultDiv.classList.add('show');
-        }
+            document.getElementById('loading').style.display = 'none';
 
-        function hideResult() {
-            document.getElementById('result').classList.remove('show');
+            if (!response.ok) {
+                throw new Error('API Hatası');
+            }
+
+            const contentType = response.headers.get('content-type');
+            
+            if (contentType.includes('application/json')) {
+                const data = await response.json();
+                if(data.success) {
+                    document.getElementById('qr-preview').innerHTML = `<img id="result-img" src="${data.qrCode}" alt="QR">
+`;
+                    const dlBtn = document.getElementById('btn-download');
+                    dlBtn.href = data.qrCode;
+                    dlBtn.download = 'qrcode.png';
+                    document.getElementById('download-area').classList.add('show');
+                } else {
+                    throw new Error(data.error || 'Bilinmeyen hata');
+                }
+            } else { // SVG or other text
+                const textData = await response.text();
+                document.getElementById('qr-preview').innerHTML = textData;
+                
+                // Create download for SVG
+                const blob = new Blob([textData], {type: 'image/svg+xml'});
+                const url = URL.createObjectURL(blob);
+                const dlBtn = document.getElementById('btn-download');
+                dlBtn.href = url;
+                dlBtn.download = 'qrcode.svg';
+                document.getElementById('download-area').classList.add('show');
+            }
+
+        } catch (error) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-msg').textContent = error.message;
+            document.getElementById('error-msg').style.display = 'block';
         }
+    }
     </script>
 </body>
 </html>

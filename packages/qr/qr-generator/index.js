@@ -37,9 +37,13 @@ async function main(args) {
     }
 
     // QR kod seçenekleri
+    const margin = args.margin !== undefined ? parseInt(args.margin) : 1;
+    const errorCorrectionLevel = ['L', 'M', 'Q', 'H'].includes(args.errorCorrectionLevel) ? args.errorCorrectionLevel : 'M';
+
     const options = {
       width: size,
-      margin: 2,
+      margin: margin,
+      errorCorrectionLevel: errorCorrectionLevel,
       color: {
         dark: args.color || '#000000',
         light: args.background || '#FFFFFF'
