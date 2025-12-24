@@ -22,8 +22,10 @@ Bu projeyi DigitalOcean üzerinde çalıştırmanın en kolay iki yolu:
 2. [DigitalOcean App Platform](https://cloud.digitalocean.com/apps) sayfasına gidin.
 3. **Create App** -> **GitHub** seçeneği ile reponuzu bağlayın.
 4. DigitalOcean projeyi `Functions` olarak otomatik algılayacaktır.
-5. **Next** diyerek ilerleyin ve **Create Resources** butonuna basın.
-6. Deploy bittiğinde size verilen URL'i (örn: `https://...ondigitalocean.app`) kullanmaya başlayabilirsiniz.
+5. **Next** diyerek ilerleyin.
+6. ⚠️ **ÖNEMLİ:** Deploy öncesi sayfada **HTTP Request Routes** ayarını bulun ve Route Path'i `/` olarak değiştirin (varsayılan repo adı yerine).
+7. **Create Resources** butonuna basın.
+8. Deploy bittiğinde size verilen URL'i (örn: `https://...ondigitalocean.app`) kullanmaya başlayabilirsiniz.
 
 ### Yöntem 2: CLI (doctl)
 Bilgisayarınızda `doctl` yüklü ise:
