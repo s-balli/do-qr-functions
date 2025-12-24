@@ -1,0 +1,10 @@
+name: qr-code-generator
+region: fra
+
+functions:
+  - name: qr-functions
+    source_dir: /
+    github:
+      deploy_on_push: true
+    routes:
+      - path: /
